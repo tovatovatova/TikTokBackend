@@ -1,7 +1,6 @@
 import os
 import cv2
 from lib.openai_client import client
-import 
 
 def video_to_frames(file_path: str, frames_interval: int = 10) -> list[str]:
     # Create frames directory if it doesn't exist
