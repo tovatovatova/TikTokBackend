@@ -9,7 +9,7 @@ def upload_blob(bucket_name, source_file_name, destination_blob_name):
     blob.upload_from_filename(source_file_name)
     print(f"File {source_file_name} uploaded to {destination_blob_name}.")
 
-def analyze_video(gcs_uri):
+def analyze_video_gcs(gcs_uri: str):
     """Analyze a video stored in Google Cloud Storage for shot changes, labels, and explicit content."""
     client = videointelligence.VideoIntelligenceServiceClient()
     features = [
@@ -28,14 +28,16 @@ def analyze_video(gcs_uri):
         for category_entity in segment_label.category_entities:
             print(f"\tCategory: {category_entity.description}")
 
-# Replace with your bucket name, local video file, and desired blob name
-bucket_name = "tiktok-analyzer"
-local_video_file = r"C:\Users\ywiesel\Downloads\test.mp4"
-blob_name = "your-video.mp4"
 
-# Upload local video file to Google Cloud Storage
-upload_blob(bucket_name, local_video_file, blob_name)
+if __name__ == '__main__':
+    # Replace with your bucket name, local video file, and desired blob name
+    bucket_name = "tiktok-analyzer"
+    local_video_file = r"C:\Users\ywiesel\Downloads\test.mp4"
+    blob_name = "your-video.mp4"
 
-# Analyze the uploaded video with the Video Intelligence API
-gcs_uri = f"gs://{bucket_name}/{blob_name}"
-analyze_video(gcs_uri)
+    # Upload local video file to Google Cloud Storage
+    upload_blob(bucket_name, local_video_file, blob_name)
+
+    # Analyze the uploaded video with the Video Intelligence API
+    gcs_uri = f"gs://{bucket_name}/{blob_name}"
+    analyze_video_gcs(gcs_uri)
