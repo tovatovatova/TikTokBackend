@@ -23,7 +23,7 @@ def video_to_frames(file_path: str, frames_interval: int = 60):
     return base64Frames
 
 ProblematicFrame = tuple[str, str] # frame path and the problem 
-def check_video_content(file_path: str) -> list[ProblematicFrame]:
+def check_video_content(file_path: str):
     frames = video_to_frames(file_path)
     PROMPT_MESSAGES = [
         {
