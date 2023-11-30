@@ -1,13 +1,13 @@
 from flask import Flask, request, jsonify
 import os
-from openai import OpenAI
+from lib.text_handler import speech_to_text 
 from flask_cors import CORS
+
+from lib.video_handler import video_to_frames
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True, allow_headers='*')
 
-API_KEY = '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'
-client = OpenAI(api_key=API_KEY)
 
 app.config['UPLOAD_FOLDER'] = 'uploads'  # Folder to store uploaded audios
 
@@ -18,22 +18,24 @@ def upload_file():
         return jsonify({'error': 'No file part'})
 
     file = request.files['file']
+    lang = request.form.get('lang', 'en')
+    
     if file.filename == '':
         return jsonify({'error': 'No selected file'})
-
+    
     try:
         # Save the uploaded file file
-        file_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename) # type: ignore
         file.save(file_path)
 
-        # Open the uploaded file and pass it to the OpenAI client for transcription
-        with open(file_path, 'rb') as uploaded_file:
-            transcript = client.audio.transcriptions.create(file=uploaded_file, model='whisper-1', language='he')
-
+        transcript_json = speech_to_text(file_path, lang)
+        
+        frames = video_to_frames(file_path)
+        print(frames)
         # Delete the saved audio file after transcription
         os.remove(file_path)
 
-        return transcript.model_dump_json()
+        return transcript_json
     except Exception as e:
         return jsonify({'error': str(e)})
 
