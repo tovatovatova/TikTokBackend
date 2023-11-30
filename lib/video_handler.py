@@ -1,7 +1,8 @@
 import os
 import cv2
 import base64
-from openai_client import client
+from lib.openai_client import client
+
 
 def video_to_frames(file_path: str, frames_interval: int = 60):
     video = cv2.VideoCapture(file_path)
@@ -22,27 +23,28 @@ def video_to_frames(file_path: str, frames_interval: int = 60):
     print(len(base64Frames), "frames read.")
     return base64Frames
 
-ProblematicFrame = tuple[str, str] # frame path and the problem 
+
+ProblematicFrame = tuple[str, str]  # frame path and the problem
+
+
 def check_video_content(file_path: str):
     frames = video_to_frames(file_path)
-    PROMPT_MESSAGES = [
-        {
-            "role": "user",
-            "content": [
-                # "These are frames from a video that I want to upload. Generate a compelling description that I can upload along with the video.",
-                "Can tiktok approve that content?",
-                *map(lambda x: {"image": x, "resize": 768}, frames),
-            ],
-        },
-    ]
+    PROMPT_MESSAGES = [{
+        "role": "user", "content": [
+            # "These are frames from a video that I want to upload. Generate
+            # a compelling description that I can upload along with the
+            # video.",
+            "Can tiktok approve that content?",
+            *map(lambda x: {"image": x, "resize": 768}, frames), ],
+    }, ]
     params = {
-        "model": "gpt-4-vision-preview",
-        "messages": PROMPT_MESSAGES,
+        "model": "gpt-4-vision-preview", "messages": PROMPT_MESSAGES,
         "max_tokens": 200,
     }
 
     result = client.chat.completions.create(**params)
     print(result.choices[0].message.content)
+
 
 if __name__ == '__main__':
     check_video_content('C:/Users/ywiesel/Downloads/tovi-7.mp4')
