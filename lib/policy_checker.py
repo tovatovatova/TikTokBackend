@@ -1,5 +1,5 @@
 from lib.openai_client import client
-from policy_from_tiktok import POLICY
+from lib.policy_from_tiktok import POLICY
 
 
 def check_policy(text_to_check: str, policy: str = POLICY):
@@ -26,7 +26,7 @@ def check_policy(text_to_check: str, policy: str = POLICY):
     }
 
     result = client.chat.completions.create(**params)
-    return result.choices[0].message.content
+    return result.choices[0].message.content.splitlines()
 
 # x = check_policy(
 #     "Israel should be able to defend itself, and to kill terrorists"

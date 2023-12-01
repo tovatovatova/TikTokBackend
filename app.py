@@ -1,5 +1,6 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 import os
+from lib.corellation import calc_final_score, get_results_template
 
 from lib.policy_checker import check_policy
 from lib.text_handler import speech_to_text
@@ -23,29 +24,36 @@ def upload_file():
         return jsonify({'error': 'No file part'})
 
     file = request.files['file']
-    lang = request.form.get('lang', 'en')
+    lang = request.form.get('lang', 'en')[:2].lower()
 
     if file.filename == '':
         return jsonify({'error': 'No selected file'})
 
     try:
         # Save the uploaded file
-        file_path = os.path.join(
-            app.config['UPLOAD_FOLDER'], file.filename
-        )  # type: ignore
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)  # type: ignore
         file.save(file_path)
 
-        transcript = speech_to_text(file_path, lang)
+        results = get_results_template()
+        
         frames = video_to_frames(file_path)
-        policy_result = check_policy(transcript)
-        print(frames)
+        
+        transcript = speech_to_text(file_path, lang)
+        transcript_results = check_policy(transcript)
+        results['details']['audio_results']['score'] = transcript_results[0]
+
         # Delete the saved audio file after transcription
         os.remove(file_path)
-        return policy_result
+        results['score'] = calc_final_score(results)
+        return results
 
     except Exception as e:
+        print(e)
         return jsonify({'error': str(e)})
 
+@app.route('/images/<path:path>')
+def send_report(path):
+    return send_from_directory('frames', path)
 
 if __name__ == '__main__':
     if not os.path.exists(app.config['UPLOAD_FOLDER']):

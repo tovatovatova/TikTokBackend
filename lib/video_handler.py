@@ -43,7 +43,7 @@ def check_video_content(file_path: str):
     }
 
     result = client.chat.completions.create(**params)
-    print(result.choices[0].message.content)
+    return result.choices[0].message.content
 
 
 if __name__ == '__main__':

@@ -14,8 +14,6 @@ def analyze_video_gcs(gcs_uri: str):
     client = videointelligence.VideoIntelligenceServiceClient()
     features = [
         videointelligence.Feature.TEXT_DETECTION, 
-        videointelligence.Feature.SPEECH_TRANSCRIPTION, 
-        videointelligence.Feature.EXPLICIT_CONTENT_DETECTION
     ]
     operation = client.annotate_video(request={"features": features, "input_uri": gcs_uri})
     print("\nProcessing video for annotations:")
