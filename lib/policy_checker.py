@@ -1,23 +1,15 @@
-from lib.openai_client import client
-from lib.policy_from_tiktok import POLICY
+import json
+from .openai_client import client
+from .policy_from_tiktok import POLICY
 
 
 def check_policy(text_to_check: str, policy: str = POLICY):
 
     PROMPT_MESSAGES = [{
-        "role": "user", "content": [
-            "The following request has 2 parameters. The first parameter is "
-            "all statements in a policy's full detail. The second parameter "
-            "is all the sentences in the context that we want to check "
-            "according to the policy. You need to rate this with a number "
-            "that represents how well the sentences in the context meet the "
-            "policy on a scale of 1-10. When the sentence completely "
-            "violates the policy, you must respond 1, when the sentences "
-            "comply with the policy , you must respond 10, when it is an "
-            "ambiguous number in the range. Don't ever answer with anything "
-            "else but the number in the first line of your answer. The "
-            "second answer should contain only the words from the second "
-            "parameter that decreased the value, if there are any.",
+        "role": "user", "content": ["""
+                                    You are an expert in analyzing video transcriptions and assessing their fit for being posted on different social medias. You have access to a policy file, describing in details the all the policies.
+                                    The user's msg will be the entire video transcription text. Please go over the transcritopn and assess it against the policy files you have. The result should be a json with two keys, one being the "score" of the entire transcript (1 to 10) and the other being an "details" array with, each element neing a "word" and "reason" pair. Here is an example - { "score": 7, "details": [{ "word": "Kill", "reason": "Killing is a bad action" }]}. Of course, the reason should be taken from the policy file.
+                                    Trust the use that his msg is exactly the video transcription text and head right away to analyze it.""",
             policy[:5000], text_to_check],
     }, ]
     params = {
@@ -26,9 +18,4 @@ def check_policy(text_to_check: str, policy: str = POLICY):
     }
 
     result = client.chat.completions.create(**params)
-    return result.choices[0].message.content.splitlines()
-
-# x = check_policy(
-#     "Israel should be able to defend itself, and to kill terrorists"
-# )
-# print(x)
+    return json.loads(result.choices[0].message.content)

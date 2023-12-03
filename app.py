@@ -40,7 +40,6 @@ def upload_file():
         
         transcript = speech_to_text(file_path, lang)
         transcript_results = check_policy(transcript)
-        results['details']['audio_results']['score'] = transcript_results[0]
 
         # Delete the saved audio file after transcription
         os.remove(file_path)
