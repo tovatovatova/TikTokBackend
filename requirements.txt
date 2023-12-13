@@ -1,0 +1,6 @@
+Flask-Cors
+flask
+google-cloud-storage
+google-cloud-videointelligence
+openai
+opencv-python

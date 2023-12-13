@@ -1,2 +1,18 @@
+# Project inputs/outputs
 uploads
-__pycache__
+frames
+
+# PyCharm Projects
+.idea/
+
+# Vitural Env
+venv*/
+.venv*/
+
+# Python stuff - byte-compiled & optimized files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# pyenv
+.python-version
