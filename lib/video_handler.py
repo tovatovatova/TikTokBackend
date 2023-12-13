@@ -4,10 +4,10 @@ import base64
 from lib.openai_client import client
 
 
-def video_to_frames(file_path: str, frames_interval: int = 60):
+def video_to_frames(file_path: str, frames_interval: int = 60) -> list[str]:
     video = cv2.VideoCapture(file_path)
 
-    base64Frames = []
+    base64Frames: list[str] = []
     frame_index = 0
     while video.isOpened():
         success, frame = video.read()
@@ -17,17 +17,15 @@ def video_to_frames(file_path: str, frames_interval: int = 60):
 
         if frame_index % frames_interval == 0:
             _, buffer = cv2.imencode(".jpg", frame)
-            base64Frames.append(base64.b64encode(buffer).decode("utf-8"))
+            base64Frames.append(base64.b64encode(buffer).decode("utf-8")) # type: ignore
         frame_index += 1
     video.release()
     print(len(base64Frames), "frames read.")
     return base64Frames
 
 
-ProblematicFrame = tuple[str, str]  # frame path and the problem
 
-
-def check_video_content(file_path: str):
+def check_video_content(file_path: str) -> str | None:
     frames = video_to_frames(file_path)
     PROMPT_MESSAGES = [{
         "role": "user", "content": [
@@ -37,12 +35,8 @@ def check_video_content(file_path: str):
             "Can tiktok approve that content?",
             *map(lambda x: {"image": x, "resize": 768}, frames), ],
     }, ]
-    params = {
-        "model": "gpt-4-vision-preview", "messages": PROMPT_MESSAGES,
-        "max_tokens": 200,
-    }
 
-    result = client.chat.completions.create(**params)
+    result = client.chat.completions.create(model='gpt-4-vision-preview', messages=PROMPT_MESSAGES, max_tokens=200)
     return result.choices[0].message.content
 
 
