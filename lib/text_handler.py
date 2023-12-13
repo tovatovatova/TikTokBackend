@@ -1,4 +1,4 @@
-from .openai_client import client
+from lib.openai_client import client
 
 
 def speech_to_text(file_path: str, lang: str) -> str:
@@ -10,13 +10,16 @@ def speech_to_text(file_path: str, lang: str) -> str:
             )
         return transcript.text
 
+
 ASSISTANT_ID = 'asst_y787MQHifs9UrpUyXqiQe1lx'
+
+
 def evaluate_transcription(transcription: str):
    thread = client.beta.threads.create()
    message = client.beta.threads.messages.create(thread_id=thread.id, role='user', content=transcription)
    run = client.beta.threads.runs.create(thread_id=thread.id, assistant_id=ASSISTANT_ID)
 
-   while run.status != 'completed': 
+   while run.status != 'completed':
        run = client.beta.threads.runs.retrieve(thread_id=thread.id, run_id=run.id)
    messages = client.beta.threads.messages.list(thread_id=thread.id)
    print([(message.role, message.content) for message in messages.data])

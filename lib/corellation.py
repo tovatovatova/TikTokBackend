@@ -10,7 +10,8 @@ def get_results_template():
             "static_results": { "score": 8, "details": { "width": 1280, "height": 720, "bitrate": 8_000_000, "snr": 8 }},
         }
     }
-    
+
+
 def calc_final_score(results):
     all_results = results['details'].values()
     return sum(float(v['score']) for v in all_results) / len(all_results)

@@ -267,7 +267,7 @@ o	Attempting to avoid an account ban by spreading content violations across mult
 o	Using an alternative account (either a new or existing one) to continue the violating behavior that previously resulted in a ban on a different account
 o	Opening a new account after an account has been banned for a severe violation
 Misinformation
-We do not allow inaccurate, misleading, or false content that may cause significant harm to individuals or society, regardless of intent. Significant harm includes physical, psychological, or societal harm, and property damage. 
+We do not allow inaccurate, misleading, or false content that may cause significant harm to individuals or society, regardless of intent. Significant harm includes physical, psychological, or societal harm, and property damage.
 Misinformation includes inaccurate, misleading, or false content.
 Significant harm includes severe forms of:
 •	Physical injury and illness, including death
@@ -390,7 +390,7 @@ Facilitating the trade of regulated, prohibited, or high-risk goods and services
 
 Commercial Disclosures and Paid Promotion
 We value authentic viewpoints and want people to be open and honest about any goods or services discussed on our platform. To avoid misleading people, it is important to acknowledge any material relationship with a third party that may be relevant to the crediblity of your statements. Creators who promote goods or services in return for something of value must disclose it using our branded content tool or a caption in video (if the tool is unavailable in your region). This includes paid partnerships and brand endorsement. For other types of material relationships, the creator must also make a clear disclosure about such connections in a video caption.
-We do not allow any form of paid political promotion on TikTok. 
+We do not allow any form of paid political promotion on TikTok.
 Material relationship refers to a relationship that may have a significant impact on the credibility of any representation or endorsement and that would not be reasonably expected. This may include personal, family, employment, and financial relationships.
 Branded content is content that promotes goods or services where you receive something of value from a third party, such as a brand, in exchange for your post. This includes content that is required to be disclosed by your local laws or regulations.
 Disclosures are clear statements that explain your relationship to a third party. Relationships include receiving financial compensation from, having a relative who works for, and being an employee of that third party.

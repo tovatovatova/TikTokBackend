@@ -1,0 +1,4 @@
+# isort and mypy are here for those who insist on not using pre-commit
+isort
+mypy
+pre-commit
