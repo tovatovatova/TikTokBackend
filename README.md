@@ -11,6 +11,14 @@ At this stage, the service is built of 4 separate categories -
 3. Video analysis - Detecting video-content, and checking for violations in the video
 4. Static/Quality analysis - Evaluating the quality of the video to make sure it is good enough for social media
 
+## A quick look into the Architecture & Relationships
+
+### Architecture
+![image](https://github.com/tovatovatova/TikTokBackend/assets/6629650/6ceb8f72-3176-431c-975b-031f785ebd83)
+
+### Relationships
+![image](https://github.com/tovatovatova/TikTokBackend/assets/6629650/3e4a06ff-1b46-40fe-b682-82bbb31a3714)
+
 ## Working w/ static checkers
 
 ### Whats included
