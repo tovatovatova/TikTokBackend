@@ -1,0 +1,3 @@
+# Mark .jpg and .mp4 files as binary
+*.jpg binary
+*.mp4 binary

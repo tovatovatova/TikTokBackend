@@ -1,6 +1,7 @@
 import json
-from .openai_client import client
-from .policy_from_tiktok import POLICY
+
+from lib.openai_client import client
+from lib.policy_from_tiktok import POLICY
 
 
 def check_policy(text_to_check: str, policy: str = POLICY):
@@ -17,5 +18,6 @@ def check_policy(text_to_check: str, policy: str = POLICY):
         "max_tokens": 200,
     }
 
-    result = client.chat.completions.create(**params)
+    # TODO: Same todo as in the video_handler.py file
+    result = client.chat.completions.create(**params)  # type: ignore
     return json.loads(result.choices[0].message.content)

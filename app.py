@@ -1,11 +1,11 @@
-from flask import Flask, request, jsonify, send_from_directory
 import os
-from lib.corellation import calc_final_score, get_results_template
 
-from lib.policy_checker import check_policy
-from lib.text_handler import speech_to_text
+from flask import Flask, jsonify, request, send_from_directory
 from flask_cors import CORS
 
+from lib.corellation import calc_final_score, get_results_template
+from lib.policy_checker import check_policy
+from lib.text_handler import speech_to_text
 from lib.video_handler import video_to_frames
 
 app = Flask(__name__)
@@ -35,9 +35,9 @@ def upload_file():
         file.save(file_path)
 
         results = get_results_template()
-        
+
         frames = video_to_frames(file_path)
-        
+
         transcript = speech_to_text(file_path, lang)
         transcript_results = check_policy(transcript)
 

@@ -16,3 +16,6 @@ __pycache__/
 
 # pyenv
 .python-version
+
+# User private dir
+my_stuff

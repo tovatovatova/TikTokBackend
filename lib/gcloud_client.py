@@ -1,19 +1,21 @@
-from google.cloud import storage
-from google.cloud import videointelligence
+import google.cloud.storage as gc_storage
+import google.cloud.videointelligence as gc_video
+
 
 def upload_blob(bucket_name, source_file_name, destination_blob_name):
     """Uploads a file to the bucket."""
-    storage_client = storage.Client()
+    storage_client = gc_storage.Client()
     bucket = storage_client.bucket(bucket_name)
     blob = bucket.blob(destination_blob_name)
     blob.upload_from_filename(source_file_name)
     print(f"File {source_file_name} uploaded to {destination_blob_name}.")
 
+
 def analyze_video_gcs(gcs_uri: str):
     """Analyze a video stored in Google Cloud Storage for shot changes, labels, and explicit content."""
-    client = videointelligence.VideoIntelligenceServiceClient()
+    client = gc_video.VideoIntelligenceServiceClient()
     features = [
-        videointelligence.Feature.TEXT_DETECTION, 
+        gc_video.Feature.TEXT_DETECTION,
     ]
     operation = client.annotate_video(request={"features": features, "input_uri": gcs_uri})
     print("\nProcessing video for annotations:")

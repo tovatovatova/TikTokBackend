@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 
+
 def get_video_quality(video_file):
     # Open the video file using cv2.VideoCapture()
     cap = cv2.VideoCapture(video_file)
