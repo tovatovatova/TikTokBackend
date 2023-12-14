@@ -2,3 +2,4 @@
 isort
 mypy
 pre-commit
+types-Flask-Cors

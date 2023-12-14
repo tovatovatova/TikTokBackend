@@ -52,4 +52,4 @@ def check_video_content(file_path: str) -> Optional[str]:
 
 
 if __name__ == '__main__':
-    print(check_video_content('C:/projects/personal_stuff/TikTokBackend/frames/test-20.mp4'))
+    print(check_video_content('../frames/test-20.mp4'))
