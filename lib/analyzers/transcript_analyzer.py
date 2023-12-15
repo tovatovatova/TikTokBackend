@@ -34,7 +34,7 @@ def _srt_to_sections(srt_text: str) -> list[Section]:
 def analyze(path: str, user_config : UserConfig) -> list[Section]:
     transcription_srt = speech_to_text_srt(path, lang=user_config.lang)
     sections = _srt_to_sections(transcription_srt)
-    to_gpt = [section.to_gpt() for section in sections]
+    to_gpt = [section.to_gpt(i) for i, section in enumerate(sections)]
     assist_res = run_assistant(Assistant.Transcript, json.dumps(to_gpt))
     assist_res_list = json.loads(assist_res.replace('```json', '').replace('```', ''))
     for assist_obj, section in zip(assist_res_list, sections):

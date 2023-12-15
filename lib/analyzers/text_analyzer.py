@@ -8,7 +8,7 @@ from lib.user_config import UserConfig
 
 def analyze(path: str, user_config : UserConfig) -> list[Section]:
     sections = upload_video_and_extract_in_video_text(path)
-    to_gpt = [section.to_gpt() for section in sections]
+    to_gpt = [section.to_gpt(i) for i, section in enumerate(sections)]
     assist_res = run_assistant(Assistant.Text, json.dumps(to_gpt))
     assist_res_list = json.loads(assist_res.replace('```json', '').replace('```', ''))
     for assist_obj, section in zip(assist_res_list, sections):

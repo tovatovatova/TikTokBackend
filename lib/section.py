@@ -20,11 +20,10 @@ class Section:
     reason: str | None = None
     processed: bool = False
 
-    def to_gpt(self) -> dict[str, Any]:
+    def to_gpt(self, index: int) -> dict[str, Any]:
         assert self.reason is None and self.score is None and self.processed == False
         return {
-            'start': self.start,
-            'end': self.end,
+            'idx': index,
             'info': self.info,
             'score': self.score,
             'reason': self.reason,

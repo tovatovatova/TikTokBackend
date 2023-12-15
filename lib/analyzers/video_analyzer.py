@@ -40,7 +40,8 @@ def _gpt_vision_res_to_sections(gpt_res: str) -> list[Section]:
     # TODO: check if this is the required JSON from the GPT..
 
     gpt_res_list = json.loads(gpt_res)
-    sections = [Section(**obj, type=SectionTypes.video) for obj in gpt_res_list]
+
+    sections = [Section(info=obj['info'], start=obj['start'], end=obj['end'], type=SectionTypes.video) for obj in gpt_res_list]
     return sections
 
 def analyze(path: str, user_config : UserConfig) -> list[Section]:
@@ -50,8 +51,7 @@ def analyze(path: str, user_config : UserConfig) -> list[Section]:
     """
     gpt_res = send_images(frames, prompt)
     sections = _gpt_vision_res_to_sections(gpt_res)
-
-    to_gpt = [section.to_gpt() for section in sections]
+    to_gpt = [section.to_gpt(i) for i, section in enumerate(sections)]
     assist_res = run_assistant(Assistant.Video, json.dumps(to_gpt))
     assist_res_list = json.loads(assist_res.replace('```json', '').replace('```', ''))
     for assist_obj, section in zip(assist_res_list, sections):
