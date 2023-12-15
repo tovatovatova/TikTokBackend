@@ -28,8 +28,20 @@ def _video_to_frames(file_path: str, frames_interval: int = 60) -> list[str]:
     return base64_frames
 
 def _gpt_vision_res_to_sections(gpt_res: str) -> list[Section]:
-    raise NotImplementedError
+    """Getting from GPT-Vision the analyzed scenes and returning list of Sections
+    
+    Args:
+        gpt_res (str): This will be a JSON array with this objects: [{ "info": "<scene description>", "start", <seconds>, "end": <seconds> }]
 
+    Returns:
+        list[Section]
+    """
+
+    # TODO: check if this is the required JSON from the GPT..
+
+    gpt_res_list = json.loads(gpt_res)
+    sections = [Section(**obj) for obj in gpt_res_list]
+    return sections
 
 def analyze(path: str, user_config : UserConfig) -> list[Section]:
     frames = _video_to_frames(path)
