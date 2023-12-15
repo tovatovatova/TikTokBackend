@@ -53,7 +53,7 @@ def analyze(path: str, user_config : UserConfig) -> list[Section]:
 
     to_gpt = [section.to_gpt() for section in sections]
     assist_res = run_assistant(Assistant.Video, json.dumps(to_gpt))
-    assist_res_list = json.loads(assist_res)
+    assist_res_list = json.loads(assist_res.replace('```json', '').replace('```', ''))
     for assist_obj, section in zip(assist_res_list, sections):
         section.update_from_gpt(assist_obj)
     return sections
