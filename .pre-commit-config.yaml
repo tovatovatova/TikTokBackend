@@ -15,3 +15,12 @@ repos:
     hooks:
     -   id: mypy
         additional_dependencies: [types-Flask-Cors]
+
+  - repo: local # couldn't find out github repo like above
+    hooks:
+      - id: pytest-check
+        name: pytest-check
+        entry: pytest
+        language: system
+        pass_filenames: false
+        always_run: true

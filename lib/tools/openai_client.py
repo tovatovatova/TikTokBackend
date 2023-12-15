@@ -3,6 +3,7 @@ from enum import Enum
 
 from openai import OpenAI
 from openai.types.beta.threads import MessageContentText
+
 _API_KEY = os.environ['OPENAI_KEY']
 client = OpenAI(api_key=_API_KEY)
 
@@ -115,4 +116,4 @@ if __name__ == '__main__':
         "reason": null
     }
 ]""")
-    print()
+    print(res)
