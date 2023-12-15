@@ -1,5 +1,4 @@
 
-import json
 from dataclasses import dataclass
 from enum import Enum
 from typing import Any
@@ -21,15 +20,15 @@ class Section:
     reason: str | None = None
     processed: bool = False
 
-    def to_gpt(self) -> str:
+    def to_gpt(self) -> dict[str, Any]:
         assert self.reason is None and self.score is None and self.processed == False
-        return json.dumps({
+        return {
             'start': self.start,
             'end': self.end,
             'info': self.info,
             'score': self.score,
             'reason': self.reason,
-        })
+        }
 
     def update_from_gpt(self, gpt_response: dict[str, Any]) -> None:
         # TODO: Parsing Error handling

@@ -16,7 +16,7 @@ def test_section_initialization():
 def test_section_to_gpt():
     section = Section(start=0.0, end=5.0, info="Example Info", type=SectionTypes.text)
     gpt_output = section.to_gpt()
-    expected_output = '{"start": 0.0, "end": 5.0, "info": "Example Info", "score": null, "reason": null}'
+    expected_output = {"start": 0.0, "end": 5.0, "info": "Example Info", "score": None, "reason": None}
     assert gpt_output == expected_output
 
 def test_section_update_from_gpt_valid():
