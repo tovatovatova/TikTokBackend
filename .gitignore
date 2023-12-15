@@ -5,6 +5,9 @@ frames
 # PyCharm Projects
 .idea/
 
+# VSCode Projects
+.vscode/
+
 # Vitural Env
 venv*/
 .venv*/
