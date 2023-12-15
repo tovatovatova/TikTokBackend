@@ -3,7 +3,7 @@ import json
 
 import cv2
 
-from lib.section import Section
+from lib.section import Section, SectionTypes
 from lib.tools.openai_client import Assistant, run_assistant, send_images
 from lib.user_config import UserConfig
 
@@ -40,7 +40,7 @@ def _gpt_vision_res_to_sections(gpt_res: str) -> list[Section]:
     # TODO: check if this is the required JSON from the GPT..
 
     gpt_res_list = json.loads(gpt_res)
-    sections = [Section(**obj) for obj in gpt_res_list]
+    sections = [Section(**obj, type=SectionTypes.video) for obj in gpt_res_list]
     return sections
 
 def analyze(path: str, user_config : UserConfig) -> list[Section]:
