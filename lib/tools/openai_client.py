@@ -8,9 +8,9 @@ _API_KEY = os.environ['OPENAI_KEY']
 client = OpenAI(api_key=_API_KEY)
 
 class Assistant(str, Enum):
-    Video = 'asst_sMzgIiUd5HPVckcoLkEbJkLg'
+    Video = 'asst_kEeVh4jGxkn8vw67CcgCcf0b'
     Text = 'asst_Y6C3JudOf1MqHnPXSsme3ac5'
-    Transcript = 'asst_kEeVh4jGxkn8vw67CcgCcf0b'
+    Transcript = 'asst_sMzgIiUd5HPVckcoLkEbJkLg'
 
 def run_assistant(assistant: Assistant, data: str) -> str:
     thread = client.beta.threads.create()
