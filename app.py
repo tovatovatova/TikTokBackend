@@ -9,30 +9,28 @@ from lib.user_config import UserConfig
 
 app = Flask(__name__)
 CORS(
-    app, resources={r"/*": {"origins": "*"}}, supports_credentials=True,
-    allow_headers='*'
+    app,
+    resources={r"/*": {"origins": "*"}},
+    supports_credentials=True,
+    allow_headers="*",
 )
 
 
+UPLOAD_FOLDER = "uploads"  # Folder to store uploaded audios
 
 
-
-UPLOAD_FOLDER = 'uploads'  # Folder to store uploaded audios
-
-
-@app.route('/upload', methods=['POST'])
+@app.route("/upload", methods=["POST"])
 def upload_file():
+    if "file" not in request.files:
+        return jsonify({"error": "No file part"})
 
-    if 'file' not in request.files:
-        return jsonify({'error': 'No file part'})
-
-    file = request.files['file']
-    lang = request.form.get('lang', 'en')[:2].lower()
-    platform = 'tiktok'
+    file = request.files["file"]
+    lang = request.form.get("lang", "en")[:2].lower()
+    platform = "tiktok"
     user_config = UserConfig(lang=lang, platform=platform)
 
-    if file.filename == '':
-        return jsonify({'error': 'No selected file'})
+    if file.filename == "":
+        return jsonify({"error": "No selected file"})
     assert file.filename is not None
 
     try:
@@ -48,10 +46,10 @@ def upload_file():
         return jsonify(results_dicts)
     except Exception as e:
         print(e)
-        return jsonify({'error': str(e)})
+        return jsonify({"error": str(e)})
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     if not os.path.exists(UPLOAD_FOLDER):
         os.makedirs(UPLOAD_FOLDER)
     app.run(debug=True)

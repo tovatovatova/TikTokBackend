@@ -27,6 +27,7 @@ def _video_to_frames(file_path: str, frames_interval: int = 60) -> list[str]:
     print(len(base64_frames), "frames read.")
     return base64_frames
 
+
 def _gpt_vision_res_to_sections(gpt_res: str) -> list[Section]:
     """Getting from GPT-Vision the analyzed scenes and returning list of Sections
 
@@ -41,10 +42,19 @@ def _gpt_vision_res_to_sections(gpt_res: str) -> list[Section]:
 
     gpt_res_list = json.loads(gpt_res)
 
-    sections = [Section(info=obj['info'], start=obj['start'], end=obj['end'], type=SectionTypes.video) for obj in gpt_res_list]
+    sections = [
+        Section(
+            info=obj["info"],
+            start=obj["start"],
+            end=obj["end"],
+            type=SectionTypes.video,
+        )
+        for obj in gpt_res_list
+    ]
     return sections
 
-def analyze(path: str, user_config : UserConfig) -> list[Section]:
+
+def analyze(path: str, user_config: UserConfig) -> list[Section]:
     frames = _video_to_frames(path)
     prompt = """
         THE PROMPT FOR THE VIDEO
@@ -53,7 +63,7 @@ def analyze(path: str, user_config : UserConfig) -> list[Section]:
     sections = _gpt_vision_res_to_sections(gpt_res)
     to_gpt = [section.to_gpt(i) for i, section in enumerate(sections)]
     assist_res = run_assistant(Assistant.Video, json.dumps(to_gpt))
-    assist_res_list = json.loads(assist_res.replace('```json', '').replace('```', ''))
+    assist_res_list = json.loads(assist_res.replace("```json", "").replace("```", ""))
     for assist_obj, section in zip(assist_res_list, sections):
         section.update_from_gpt(assist_obj)
     return sections
