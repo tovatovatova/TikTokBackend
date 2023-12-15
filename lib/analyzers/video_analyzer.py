@@ -29,7 +29,7 @@ def _video_to_frames(file_path: str, frames_interval: int = 60) -> list[str]:
 
 def _gpt_vision_res_to_sections(gpt_res: str) -> list[Section]:
     """Getting from GPT-Vision the analyzed scenes and returning list of Sections
-    
+
     Args:
         gpt_res (str): This will be a JSON array with this objects: [{ "info": "<scene description>", "start", <seconds>, "end": <seconds> }]
 
