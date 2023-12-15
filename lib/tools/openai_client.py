@@ -48,7 +48,7 @@ def send_images(base64_frames: list[str], prompt: str, format: str = 'image/jpeg
             # TODO: Something fishy about the type and structure of prompt_messages. Need to review and possible correct.
             #  See https://platform.openai.com/docs/guides/vision/uploading-base-64-encoded-images
             "content": [
-                {'type': 'text', 'data': prompt},
+                {'type': 'text', 'text': prompt},
                 *({"type": 'image_url', 'image_url': f'data:{format};base64,{frame}'} for frame in base64_frames),
             ],
         },
