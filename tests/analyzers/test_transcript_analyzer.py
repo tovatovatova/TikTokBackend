@@ -1,9 +1,11 @@
 import json
+
 import pytest
 from pytest_mock import MockerFixture
-from lib.analyzers import transcript_analyzer
 
+from lib.analyzers import transcript_analyzer
 from lib.user_config import UserConfig
+
 
 @pytest.fixture
 def mock_openai(mocker: MockerFixture) -> None:
