@@ -1,5 +1,9 @@
-from lib.analyzers import (quality_analyzer, text_analyzer,
-                           transcript_analyzer, video_analyzer)
+from lib.analyzers import (
+    quality_analyzer,
+    text_analyzer,
+    transcript_analyzer,
+    video_analyzer,
+)
 from lib.section import Section
 from lib.user_config import UserConfig
 

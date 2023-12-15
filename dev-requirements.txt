@@ -1,4 +1,4 @@
-# isort and mypy are here for those who insist on not using pre-commit
+black
 isort
 mypy
 pytest

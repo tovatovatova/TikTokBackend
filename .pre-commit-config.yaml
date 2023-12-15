@@ -9,12 +9,19 @@ repos:
     rev: v5.10.1
     hooks:
       - id: isort
+        args: ["--profile", "black"]
 
   - repo: https://github.com/pre-commit/mirrors-mypy
     rev: v1.7.1
     hooks:
     -   id: mypy
         additional_dependencies: [types-Flask-Cors]
+
+  - repo: https://github.com/psf/black
+    rev: 23.11.0
+    hooks:
+      - id: black
+        language_version: python3.10
 
   - repo: local # couldn't find out github repo like above
     hooks:

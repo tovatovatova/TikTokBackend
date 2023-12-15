@@ -7,6 +7,7 @@ def test_user_config_initialization():
     assert user_config.lang == "en"
     assert user_config.platform == "web"
 
+
 # Test the initialization with different values
 def test_user_config_initialization_different_values():
     user_config = UserConfig(lang="fr", platform="mobile")
