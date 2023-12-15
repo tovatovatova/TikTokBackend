@@ -11,6 +11,26 @@ At this stage, the service is built of 4 separate categories -
 3. Video analysis - Detecting video-content, and checking for violations in the video
 4. Static/Quality analysis - Evaluating the quality of the video to make sure it is good enough for social media
 
+## Setting up python environment
+1. Install pyenv-win in PowerShell.
+
+```pwsh
+Invoke-WebRequest -UseBasicParsing -Uri "https://raw.githubusercontent.com/pyenv-win/pyenv-win/master/pyenv-win/install-pyenv-win.ps1" -OutFile "./install-pyenv-win.ps1"; &"./install-pyenv-win.ps1"
+```
+
+2. Open CMD
+3. Run `pyenv --version` to check if the installation was successful.
+4. Run `pyenv install 3.10.11` to install our version
+5. Run `pyenv global 3.10.11` to set a Python version as the global version
+6. Run `python3 -m pip install pip --upgrade` to upgrade pip
+7. Run `python3 -m pip install virtualenv` to install virtualenv
+8. Run `python3 -m virtualenv .venv` to initiate venv
+9. Run `./.venv/Scripts/activate.bat` to activate the venv
+
+
+## Install requirements
+1. Run `pip install -r requirement.txt`
+
 ## A quick look into the Architecture & Relationships
 
 ### Architecture
@@ -29,7 +49,7 @@ At this stage, the service is built of 4 separate categories -
 3. **mypy** - type checker (https://mypy-lang.org/)
 
 ### Setting up
-1. Install dev-packages - `pip install -r dev_requirements.txt`
+1. Install dev-packages - `pip install -r dev-requirements.txt`
 2. Install pre-commit hook - `pre-commit install`
 
 ### Running the pre-commit hooks
