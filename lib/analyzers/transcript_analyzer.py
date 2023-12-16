@@ -37,13 +37,12 @@ def _srt_to_sections(srt_text: str) -> list[Section]:
 class TranscriptAnalyzer(BaseAnalyzer):
     _AssistantType = Assistant.Transcript
 
-    def analyze(self) -> list[Section]:
-        transcription_srt = speech_to_text_srt(self.path, lang=self.user_config.lang)
-        self._sections = _srt_to_sections(transcription_srt)
-        self._process()
-        return self._sections
+    def _prepare_sections(self, file_path: str) -> list[Section]:
+        transcription_srt = speech_to_text_srt(file_path, lang=self.user_config.lang)
+        sections = _srt_to_sections(transcription_srt)
+        return sections
 
 
 if __name__ == "__main__":
-    analyzer = TranscriptAnalyzer("./frames/test-20.mp4", UserConfig("en", "tiktok"))
-    print(analyzer.analyze())
+    analyzer = TranscriptAnalyzer(UserConfig("en", "tiktok"))
+    print(analyzer.analyze("./frames/test-20.mp4"))

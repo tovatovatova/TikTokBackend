@@ -8,12 +8,12 @@ from lib.user_config import UserConfig
 
 def get_final_results(file_path: str, user_config: UserConfig) -> list[Section]:
     final_results: list[Section] = []
-    analyzers = [Analyzer(file_path, user_config) for Analyzer in AllAnalyzers]
+    analyzers = [Analyzer(user_config) for Analyzer in AllAnalyzers]
     with ThreadPoolExecutor(max_workers=len(analyzers)) as executor:
 
         def analyze(analyzer: BaseAnalyzer) -> list[Section]:
             try:
-                return analyzer.analyze()
+                return analyzer.analyze(file_path)
             except Exception as e:
                 print(e)
                 return [

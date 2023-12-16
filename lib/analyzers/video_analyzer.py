@@ -98,15 +98,14 @@ class VideoAnalyzer(BaseAnalyzer):
         You response mush bt ONLY the JSON formatted reply!
     """
 
-    def analyze(self) -> list[Section]:
-        frames = _video_to_frames(self.path)
+    def _prepare_sections(self, file_path: str) -> list[Section]:
+        frames = _video_to_frames(file_path)
 
         gpt_res = send_images(frames, self.PROMPT)
-        self._sections = _gpt_vision_res_to_sections(gpt_res)
-        self._process()
-        return self._sections
+        sections = _gpt_vision_res_to_sections(gpt_res)
+        return sections
 
 
 if __name__ == "__main__":
-    analyzer = VideoAnalyzer("./frames/test-20.mp4", UserConfig("", ""))
-    analyzer.analyze()
+    analyzer = VideoAnalyzer(UserConfig("", ""))
+    analyzer.analyze("./frames/test-20.mp4")

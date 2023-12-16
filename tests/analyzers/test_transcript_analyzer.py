@@ -24,7 +24,7 @@ def mock_openai(mocker: MockerFixture) -> None:
 def test_analyze(mock_openai: None) -> None:
     path = "path/to/audio"
     user_config = UserConfig(lang="en", platform="web")
-    sections = TranscriptAnalyzer(path, user_config).analyze()
+    sections = TranscriptAnalyzer(user_config).analyze(path)
 
     # Assertions to validate the behavior of analyze function
     assert len(sections) == 1

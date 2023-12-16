@@ -36,6 +36,6 @@ def mock_openai(mocker: MockerFixture) -> None:
 def test_analyze(mock_openai: None) -> None:
     path = "./frames/test-20.mp4"
     user_config = UserConfig(lang="en", platform="web")
-    sections = VideoAnalyzer(path, user_config).analyze()
+    sections = VideoAnalyzer(user_config).analyze(path)
     for section in sections:
         assert section.processed

@@ -8,12 +8,10 @@ from lib.user_config import UserConfig
 class TextAnalyzer(BaseAnalyzer):
     _AssistantType = Assistant.Text
 
-    def analyze(self) -> list[Section]:
-        self._sections = upload_video_and_extract_in_video_text(self.path)
-        self._process()
-        return self._sections
+    def _prepare_sections(self, file_path: str) -> list[Section]:
+        return upload_video_and_extract_in_video_text(file_path)
 
 
 if __name__ == "__main__":
-    analyzer = TextAnalyzer("./frames/test-20.mp4", UserConfig("en", "tiktok"))
-    print(analyzer.analyze())
+    analyzer = TextAnalyzer(UserConfig("en", "tiktok"))
+    print(analyzer.analyze("./frames/test-20.mp4"))
