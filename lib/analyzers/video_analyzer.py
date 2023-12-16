@@ -43,7 +43,7 @@ def _gpt_vision_res_to_sections(
 
     # TODO: check if this is the required JSON from the GPT..
 
-    gpt_res_list = json.loads(gpt_res.replace("```json", "").replace("```", ""))
+    gpt_res_list = json.loads(gpt_res)
 
     sections: list[Section] = []
     for obj in gpt_res_list:
@@ -102,7 +102,7 @@ class VideoAnalyzer(BaseAnalyzer):
         frames = _video_to_frames(file_path)
 
         gpt_res = send_images(frames, self.PROMPT)
-        sections = _gpt_vision_res_to_sections(gpt_res)
+        sections = _gpt_vision_res_to_sections(self._extract_json_str(gpt_res))
         return sections
 
 
