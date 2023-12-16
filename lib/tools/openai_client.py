@@ -15,7 +15,7 @@ class Assistant(str, Enum):
     Transcript = "asst_sMzgIiUd5HPVckcoLkEbJkLg"
 
 
-def run_assistant(assistant: Assistant, data: str, timeout: int = 30) -> str:
+def run_assistant(assistant: Assistant, data: str, timeout: int = 60) -> str:
     start_time = time.time()
     print(f"[{assistant.name}] assistant started with {data = }")
     thread = client.beta.threads.create()
