@@ -55,9 +55,10 @@
 #     return quality
 
 
+from lib.analyzers.base_analyzer import BaseAnalyzer
 from lib.section import Section
-from lib.user_config import UserConfig
 
 
-def analyze(path: str, user_config: UserConfig) -> list[Section]:
-    return []
+class QualityAnalyzer(BaseAnalyzer):
+    def analyze(self) -> list[Section]:
+        return []

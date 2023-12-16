@@ -3,9 +3,9 @@ import json
 
 import cv2
 
+from lib.analyzers.base_analyzer import BaseAnalyzer
 from lib.section import Section, SectionTypes
-from lib.tools.openai_client import Assistant, run_assistant, send_images
-from lib.user_config import UserConfig
+from lib.tools.openai_client import Assistant, send_images
 
 
 def _video_to_frames(file_path: str, frames_interval: int = 60) -> list[str]:
@@ -54,16 +54,15 @@ def _gpt_vision_res_to_sections(gpt_res: str) -> list[Section]:
     return sections
 
 
-def analyze(path: str, user_config: UserConfig) -> list[Section]:
-    frames = _video_to_frames(path)
-    prompt = """
-        THE PROMPT FOR THE VIDEO
-    """
-    gpt_res = send_images(frames, prompt)
-    sections = _gpt_vision_res_to_sections(gpt_res)
-    to_gpt = [section.to_gpt(i) for i, section in enumerate(sections)]
-    assist_res = run_assistant(Assistant.Video, json.dumps(to_gpt))
-    assist_res_list = json.loads(assist_res.replace("```json", "").replace("```", ""))
-    for assist_obj, section in zip(assist_res_list, sections):
-        section.update_from_gpt(assist_obj)
-    return sections
+class VideoAnalyzer(BaseAnalyzer):
+    _AssistantType = Assistant.Video
+
+    def analyze(self) -> list[Section]:
+        frames = _video_to_frames(self.path)
+        prompt = """
+            THE PROMPT FOR THE VIDEO
+        """
+        gpt_res = send_images(frames, prompt)
+        self._sections = _gpt_vision_res_to_sections(gpt_res)
+        self._process()
+        return self._sections

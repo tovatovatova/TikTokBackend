@@ -1,2 +1,14 @@
-# This file is here to help linters (specifically mypy) find the modules in this
-# directory. It is not intended to be used for anything else.
+from typing import Type
+
+from .base_analyzer import BaseAnalyzer
+from .quality_analyzer import QualityAnalyzer
+from .text_analyzer import TextAnalyzer
+from .transcript_analyzer import TranscriptAnalyzer
+from .video_analyzer import VideoAnalyzer
+
+AllAnalyzers: list[Type[BaseAnalyzer]] = [
+    TextAnalyzer,
+    VideoAnalyzer,
+    TranscriptAnalyzer,
+    QualityAnalyzer,
+]

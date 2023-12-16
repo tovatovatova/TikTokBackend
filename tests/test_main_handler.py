@@ -1,29 +1,22 @@
+from unittest.mock import Mock, create_autospec
+
 import pytest
 from pytest_mock import MockerFixture
 
-from lib.main_handler import Section, UserConfig, get_final_results
-from lib.section import SectionTypes
+from lib.analyzers import AllAnalyzers
+from lib.main_handler import get_final_results
+from lib.section import Section
+from lib.user_config import UserConfig
 
 
 @pytest.fixture
-def mock_analyzers(mocker: MockerFixture) -> None:
-    # Mock each analyze function to return a predefined list of Section objects
-    mocker.patch(
-        "lib.main_handler.quality_analyzer.analyze",
-        return_value=[Section(0, 0, "", SectionTypes.quality)],
-    )
-    mocker.patch(
-        "lib.main_handler.text_analyzer.analyze",
-        return_value=[Section(0, 0, "", SectionTypes.quality)],
-    )
-    mocker.patch(
-        "lib.main_handler.transcript_analyzer.analyze",
-        return_value=[Section(0, 0, "", SectionTypes.quality)],
-    )
-    mocker.patch(
-        "lib.main_handler.video_analyzer.analyze",
-        return_value=[Section(0, 0, "", SectionTypes.quality)],
-    )
+def mock_analyzers(mocker: MockerFixture):
+    # Mock each analyzer class and its analyze method
+    for Analyzer in AllAnalyzers:
+        mock_analyzer = create_autospec(Analyzer, instance=True)
+        mock_analyzer.analyze.return_value = [Mock(spec=Section)]
+        mocker.patch.object(Analyzer, "__init__", return_value=None)
+        mocker.patch.object(Analyzer, "analyze", mock_analyzer.analyze)
 
 
 def test_get_final_results(mock_analyzers: None) -> None:
