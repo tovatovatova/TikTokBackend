@@ -13,8 +13,7 @@ def mock_openai(mocker: MockerFixture) -> None:
     image_return_message = [
         {
             "info": "In This Scene the owner of a store yelling at a child to leave the store",
-            "start": 4,
-            "end": 7,
+            "idx": 1,
         }
     ]
     mocker.patch(
