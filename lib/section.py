@@ -8,6 +8,7 @@ class SectionTypes(str, Enum):
     transcript = "transcript"
     text = "text"
     quality = "quality"
+    error = "error"
 
 
 @dataclass

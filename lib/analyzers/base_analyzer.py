@@ -19,6 +19,7 @@ class BaseAnalyzer(ABC):
         ...
 
     def _process(self) -> None:
+        print(f"{self.__class__.__name__}._process()")
         assert self._AssistantType is not None
         to_gpt = [section.to_gpt(i) for i, section in enumerate(self._sections)]
         assist_res = run_assistant(self._AssistantType, json.dumps(to_gpt))
