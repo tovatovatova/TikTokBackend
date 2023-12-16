@@ -3,7 +3,7 @@ import json
 import pytest
 from pytest_mock import MockerFixture
 
-from lib.analyzers import video_analyzer
+from lib.analyzers import VideoAnalyzer
 from lib.user_config import UserConfig
 
 
@@ -13,8 +13,7 @@ def mock_openai(mocker: MockerFixture) -> None:
     image_return_message = [
         {
             "info": "In This Scene the owner of a store yelling at a child to leave the store",
-            "start": 4,
-            "end": 7,
+            "idx": 1,
         }
     ]
     mocker.patch(
@@ -29,7 +28,7 @@ def mock_openai(mocker: MockerFixture) -> None:
         }
     ]
     mocker.patch(
-        "lib.analyzers.video_analyzer.run_assistant",
+        "lib.analyzers.base_analyzer.run_assistant",
         return_value=json.dumps(assist_return_message),
     )
 
@@ -37,6 +36,6 @@ def mock_openai(mocker: MockerFixture) -> None:
 def test_analyze(mock_openai: None) -> None:
     path = "./frames/test-20.mp4"
     user_config = UserConfig(lang="en", platform="web")
-    sections = video_analyzer.analyze(path, user_config)
+    sections = VideoAnalyzer(user_config).analyze(path)
     for section in sections:
         assert section.processed

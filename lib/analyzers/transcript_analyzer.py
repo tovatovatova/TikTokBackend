@@ -1,9 +1,9 @@
-import json
 import re
 from datetime import datetime
 
+from lib.analyzers.base_analyzer import BaseAnalyzer
 from lib.section import Section, SectionTypes
-from lib.tools.openai_client import Assistant, run_assistant, speech_to_text_srt
+from lib.tools.openai_client import Assistant, speech_to_text_srt
 from lib.user_config import UserConfig
 
 
@@ -34,16 +34,15 @@ def _srt_to_sections(srt_text: str) -> list[Section]:
     return sections
 
 
-def analyze(path: str, user_config: UserConfig) -> list[Section]:
-    transcription_srt = speech_to_text_srt(path, lang=user_config.lang)
-    sections = _srt_to_sections(transcription_srt)
-    to_gpt = [section.to_gpt(i) for i, section in enumerate(sections)]
-    assist_res = run_assistant(Assistant.Transcript, json.dumps(to_gpt))
-    assist_res_list = json.loads(assist_res.replace("```json", "").replace("```", ""))
-    for assist_obj, section in zip(assist_res_list, sections):
-        section.update_from_gpt(assist_obj)
-    return sections
+class TranscriptAnalyzer(BaseAnalyzer):
+    _AssistantType = Assistant.Transcript
+
+    def _prepare_sections(self, file_path: str) -> list[Section]:
+        transcription_srt = speech_to_text_srt(file_path, lang=self.user_config.lang)
+        sections = _srt_to_sections(transcription_srt)
+        return sections
 
 
 if __name__ == "__main__":
-    print(analyze("./frames/test-20.mp4", UserConfig("en", "tiktok")))
+    analyzer = TranscriptAnalyzer(UserConfig("en", "tiktok"))
+    print(analyzer.analyze("./frames/test-20.mp4"))

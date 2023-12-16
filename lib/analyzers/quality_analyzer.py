@@ -55,9 +55,14 @@
 #     return quality
 
 
+from lib.analyzers.base_analyzer import BaseAnalyzer
 from lib.section import Section
-from lib.user_config import UserConfig
 
 
-def analyze(path: str, user_config: UserConfig) -> list[Section]:
-    return []
+class QualityAnalyzer(BaseAnalyzer):
+    def _prepare_sections(self, file_path: str) -> list[Section]:
+        return []
+
+    def analyze(self, file_path: str) -> list[Section]:
+        """Overriding the analyze method to not run BaseAnalyzer._process_sections since we don't use openai"""
+        return []
