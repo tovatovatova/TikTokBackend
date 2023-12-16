@@ -1,4 +1,5 @@
 import json
+import re
 from abc import ABC, abstractmethod
 
 from lib.section import Section
@@ -40,4 +41,7 @@ class BaseAnalyzer(ABC):
 
     @staticmethod
     def _extract_json_str(string_response: str) -> str:
-        return string_response.replace("```json", "").replace("```", "")
+        ret = string_response
+        ret = re.sub(r".*```json", "", ret, re.DOTALL)
+        ret = re.sub(r"```.*", "", ret, re.DOTALL)
+        return ret
