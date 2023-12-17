@@ -54,7 +54,7 @@ def _gpt_vision_res_to_sections(
 
     sections: list[Section] = []
     for obj in gpt_res_list:
-        start = (obj["idx"] - 1) * sampling_interval_sec
+        start = obj["idx"] * sampling_interval_sec
         end = start + sampling_interval_sec
         sections.append(
             Section(
@@ -84,11 +84,11 @@ class VideoAnalyzer(BaseAnalyzer):
         Please reply with a JSON of this format (fill in the details in the "info" values instead of null) -
         [
             {
-                "idx": 1,
+                "idx": 0,
                 "info": null,
             },
             {
-                "idx": 2,
+                "idx": 1,
                 "info": null,
             }
         ]
