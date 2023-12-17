@@ -64,25 +64,20 @@ def speech_to_text_srt(file_path: str, lang: str):
 def send_images(
     base64_frames: list[str], prompt: str, format: str = "image/jpeg"
 ) -> str:
-    prompt_messages = [
+    messages = [
+        {"role": "system", "content": [{"type": "text", "text": prompt}]},
         {
             "role": "user",
-            # TODO: Something fishy about the type and structure of prompt_messages. Need to review and possible correct.
-            #  See https://platform.openai.com/docs/guides/vision/uploading-base-64-encoded-images
             "content": [
-                {"type": "text", "text": prompt},
-                *(
-                    {"type": "image_url", "image_url": f"data:{format};base64,{frame}"}
-                    for frame in base64_frames
-                ),
+                {"type": "image_url", "image_url": f"data:{format};base64,{frame}"}
+                for frame in base64_frames
             ],
         },
     ]
-
     result = client.chat.completions.create(
         model="gpt-4-vision-preview",
-        messages=prompt_messages,  # type: ignore
-        max_tokens=700,  # TODO: check if this is the optimal number (price and performance)
+        messages=messages,  # type: ignore
+        max_tokens=2000,  # TODO: check if this is the optimal number (price and performance)
     )
 
     # TODO: Handle correctly with exceptions and converting to response
