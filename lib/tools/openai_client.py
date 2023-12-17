@@ -85,6 +85,7 @@ def send_images(
         max_tokens=700,  # TODO: check if this is the optimal number (price and performance)
     )
 
+    # TODO: Handle correctly with exceptions and converting to response
     assert result.choices[0].message.content is not None
 
     return result.choices[0].message.content
