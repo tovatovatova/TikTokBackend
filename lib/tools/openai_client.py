@@ -1,4 +1,5 @@
 import os
+import time
 from enum import Enum
 
 from openai import OpenAI
@@ -14,7 +15,9 @@ class Assistant(str, Enum):
     Transcript = "asst_sMzgIiUd5HPVckcoLkEbJkLg"
 
 
-def run_assistant(assistant: Assistant, data: str) -> str:
+def run_assistant(assistant: Assistant, data: str, timeout: int = 60) -> str:
+    start_time = time.time()
+    print(f"[{assistant.name}] assistant started with {data = }")
     thread = client.beta.threads.create()
     _message = client.beta.threads.messages.create(
         thread_id=thread.id, role="user", content=data
@@ -22,7 +25,17 @@ def run_assistant(assistant: Assistant, data: str) -> str:
     run = client.beta.threads.runs.create(thread_id=thread.id, assistant_id=assistant)
 
     while run.status != "completed":
+        run_time = time.time() - start_time
+        if run_time > timeout:
+            raise TimeoutError(f"Assistant Timeout {assistant.name = } {data = }")
+        print(
+            f"[{assistant.name}][status:{run.status}] waiting for "
+            f"assistant to complete ({run_time}) sec."
+        )
+
         run = client.beta.threads.runs.retrieve(thread_id=thread.id, run_id=run.id)
+        time.sleep(2)
+
     messages = client.beta.threads.messages.list(thread_id=thread.id)
     # unpacking like this so it's will error in case there is multiple
     (assist_message,) = (
@@ -31,6 +44,7 @@ def run_assistant(assistant: Assistant, data: str) -> str:
     (content,) = assist_message
     # asserting that this is a message content (which has the text attr not like in image content for example..)
     assert isinstance(content, MessageContentText)
+    print(f"[{assistant.name}] response retrieved: {content.text.value}")
     return content.text.value
 
 
@@ -68,7 +82,7 @@ def send_images(
     result = client.chat.completions.create(
         model="gpt-4-vision-preview",
         messages=prompt_messages,  # type: ignore
-        max_tokens=200,  # TODO: check if this is the optimal number (price and performance)
+        max_tokens=700,  # TODO: check if this is the optimal number (price and performance)
     )
 
     assert result.choices[0].message.content is not None
