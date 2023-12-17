@@ -28,7 +28,10 @@ def run_assistant(assistant: Assistant, data: str, timeout: int = 60) -> str:
         run_time = time.time() - start_time
         if run_time > timeout:
             raise TimeoutError(f"Assistant Timeout {assistant.name = } {data = }")
-        print(f"[{assistant.name}] waiting for assistant to complete ({run_time}) sec.")
+        print(
+            f"[{assistant.name}][status:{run.status}] waiting for "
+            f"assistant to complete ({run_time}) sec."
+        )
 
         run = client.beta.threads.runs.retrieve(thread_id=thread.id, run_id=run.id)
         time.sleep(2)
