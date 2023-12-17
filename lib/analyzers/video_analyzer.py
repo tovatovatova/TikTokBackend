@@ -9,8 +9,15 @@ from lib.tools.openai_client import Assistant, send_images
 from lib.user_config import UserConfig
 
 
-def _video_to_frames(file_path: str, frames_interval: int = 60) -> list[str]:
+def _video_to_frames(file_path: str, sampling_interval_sec: float) -> list[str]:
     video = cv2.VideoCapture(file_path)
+
+    # TODO: Handle correctly with exceptions and converting to response
+    assert video.isOpened(), f"Video file {file_path} not found."
+
+    # Extract fps and convert sampling_interval_sec to frames_interval
+    frame_rate = video.get(cv2.CAP_PROP_FPS)
+    frames_interval = int(sampling_interval_sec * frame_rate)
 
     base64_frames: list[str] = []
     frame_index = 0
@@ -30,13 +37,13 @@ def _video_to_frames(file_path: str, frames_interval: int = 60) -> list[str]:
 
 
 def _gpt_vision_res_to_sections(
-    gpt_res: str, check_frame_interval_in_sec: float = 1
+    gpt_res: str, sampling_interval_sec: float
 ) -> list[Section]:
     """Getting from GPT-Vision the analyzed scenes and returning list of Sections
 
     Args:
         gpt_res (str): This will be a JSON array with this objects: [{ "info": "<scene description>", "idx": <index> }]
-
+        sampling_interval_sec (float): The sampling time interval between consecutive frames
     Returns:
         list[Section]
     """
@@ -47,8 +54,8 @@ def _gpt_vision_res_to_sections(
 
     sections: list[Section] = []
     for obj in gpt_res_list:
-        start = obj["idx"] * check_frame_interval_in_sec
-        end = start + check_frame_interval_in_sec
+        start = (obj["idx"] - 1) * sampling_interval_sec
+        end = start + sampling_interval_sec
         sections.append(
             Section(
                 info=obj["info"],
@@ -99,10 +106,16 @@ class VideoAnalyzer(BaseAnalyzer):
     """
 
     def _prepare_sections(self, file_path: str) -> list[Section]:
-        frames = _video_to_frames(file_path)
+        # Sample frames from the video
+        sample_rate_sec = 2.0
+        frames = _video_to_frames(file_path, sample_rate_sec)
 
+        # Get GPT-Vision's help to understand the frames
         gpt_res = send_images(frames, self.PROMPT)
-        sections = _gpt_vision_res_to_sections(self._extract_json_str(gpt_res))
+
+        sections = _gpt_vision_res_to_sections(
+            self._extract_json_str(gpt_res), sample_rate_sec
+        )
         return sections
 
 
