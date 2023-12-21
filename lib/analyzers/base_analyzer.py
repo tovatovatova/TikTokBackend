@@ -2,25 +2,37 @@ import json
 import re
 from abc import ABC, abstractmethod
 from pathlib import Path
+from typing import Callable
 
-from lib.section import Section
+from lib.section import Section, SectionTypes, Status
 from lib.tools.openai_client import Assistant, run_assistant
 from lib.user_config import UserConfig
 
 
 class BaseAnalyzer(ABC):
     _AssistantType: Assistant | None = None
+    SectionType: SectionTypes | None = None
 
     def __init__(self, user_config: UserConfig) -> None:
         # TODO: Validate user config?
         self.user_config = user_config
 
     def analyze(self, file_path: Path) -> list[Section]:
-        sections = self._prepare_sections(file_path)
+        assert self.SectionType is not None
+        sections = self._handle_unexpected_exceptions(
+            lambda: self._prepare_sections(file_path)
+        )
+
         # TODO: Validate sections structure?
 
-        processed_sections = self.__process_sections(sections)
-        final_sections = self._post_process_sections(processed_sections)
+        processed_sections = self._handle_unexpected_exceptions(
+            lambda: self.__process_sections(sections)
+        )
+
+        final_sections = self._handle_unexpected_exceptions(
+            lambda: self._post_process_sections(processed_sections)
+        )
+
         return final_sections
 
     def __process_sections(self, sections: list[Section]) -> list[Section]:
@@ -46,3 +58,19 @@ class BaseAnalyzer(ABC):
         ret = re.sub(r".*```json", "", ret, re.DOTALL)
         ret = re.sub(r"```.*", "", ret, re.DOTALL)
         return ret
+
+    def _handle_unexpected_exceptions(self, func: Callable[[], list[Section]]):
+        assert self.SectionType is not None
+        try:
+            return func()
+        except Exception as e:
+            return [
+                Section(
+                    0,
+                    0,
+                    f"unexpected failure in {func.__name__}",
+                    self.SectionType,
+                    status=Status.error,
+                    error=e,
+                )
+            ]

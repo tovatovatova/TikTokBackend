@@ -70,6 +70,7 @@ def _gpt_vision_res_to_sections(
 
 class VideoAnalyzer(BaseAnalyzer):
     _AssistantType = Assistant.Video
+    SectionType = SectionTypes.video
     PROMPT = """
         I am sharing with you multiple images. I need you to give me extensive details on everything
         you see in each one of the images so I could share with a blind person who cannot see them by himself.

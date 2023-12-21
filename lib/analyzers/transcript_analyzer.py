@@ -48,6 +48,7 @@ def _srt_to_sections(srt_text: str) -> list[Section]:
 
 class TranscriptAnalyzer(BaseAnalyzer):
     _AssistantType = Assistant.Transcript
+    SectionType = SectionTypes.transcript
 
     def _prepare_sections(self, file_path: Path) -> list[Section]:
         audio_path = _extract_and_save_audio(file_path)

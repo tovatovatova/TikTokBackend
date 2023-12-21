@@ -58,10 +58,12 @@
 from pathlib import Path
 
 from lib.analyzers.base_analyzer import BaseAnalyzer
-from lib.section import Section
+from lib.section import Section, SectionTypes
 
 
 class QualityAnalyzer(BaseAnalyzer):
+    SectionType = SectionTypes.quality
+
     def _prepare_sections(self, file_path: Path) -> list[Section]:
         return []
 

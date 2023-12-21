@@ -1,5 +1,4 @@
 import os
-from dataclasses import asdict
 from pathlib import Path
 
 from flask import Flask, jsonify, request
@@ -43,7 +42,7 @@ def upload_file():
 
         # Delete the saved audio file after transcription
         file_path.unlink()
-        results_dicts = [asdict(section) for section in results]
+        results_dicts = [section.to_jsonable() for section in results]
         return jsonify(results_dicts)
     except Exception as e:
         print(e)

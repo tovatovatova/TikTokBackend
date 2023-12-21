@@ -1,6 +1,4 @@
-import pytest
-
-from lib.section import Section, SectionTypes
+from lib.section import Section, SectionTypes, Status
 
 
 def test_section_initialization():
@@ -11,7 +9,7 @@ def test_section_initialization():
     assert section.type == SectionTypes.text
     assert section.score is None
     assert section.reason is None
-    assert section.processed == False
+    assert section.status == Status.created
 
 
 def test_section_to_gpt():
@@ -28,12 +26,12 @@ def test_section_update_from_gpt_valid():
 
     assert section.score == 100
     assert section.reason == "Valid Reason"
-    assert section.processed == True
+    assert section.status == Status.success
 
 
 def test_section_update_from_gpt_invalid():
     section = Section(start=0.0, end=5.0, info="Example Info", type=SectionTypes.text)
     gpt_response = {"score": "Invalid", "reason": 100}  # Invalid types
 
-    with pytest.raises(AssertionError):
-        section.update_from_gpt(gpt_response)
+    section.update_from_gpt(gpt_response)
+    assert section.status == Status.error
