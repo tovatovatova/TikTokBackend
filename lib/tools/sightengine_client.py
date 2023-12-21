@@ -1,6 +1,10 @@
+import os
+
 from sightengine.client import SightengineClient
 
-client = SightengineClient("741245411", "wJnGAF8RHgZxEaKfsp3JopUkyq")
+client = SightengineClient(
+    api_secret=os.environ["SIGHTENGINE_SECRET"], api_user=os.environ["SIGHTENGINE_USER"]
+)
 
 
 def check_video(video_url: str) -> str:
