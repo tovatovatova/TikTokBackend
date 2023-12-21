@@ -1,3 +1,4 @@
+from pathlib import Path
 from unittest.mock import Mock, create_autospec
 
 import pytest
@@ -21,7 +22,7 @@ def mock_analyzers(mocker: MockerFixture):
 
 def test_get_final_results(mock_analyzers: None) -> None:
     user_config = UserConfig(lang="en", platform="web")
-    file_path = "path/to/file"
+    file_path = Path("path/to/file")
 
     results = get_final_results(file_path, user_config)
 

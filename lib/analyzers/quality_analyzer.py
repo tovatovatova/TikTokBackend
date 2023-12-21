@@ -55,14 +55,16 @@
 #     return quality
 
 
+from pathlib import Path
+
 from lib.analyzers.base_analyzer import BaseAnalyzer
 from lib.section import Section
 
 
 class QualityAnalyzer(BaseAnalyzer):
-    def _prepare_sections(self, file_path: str) -> list[Section]:
+    def _prepare_sections(self, file_path: Path) -> list[Section]:
         return []
 
-    def analyze(self, file_path: str) -> list[Section]:
+    def analyze(self, file_path: Path) -> list[Section]:
         """Overriding the analyze method to not run BaseAnalyzer._process_sections since we don't use openai"""
         return []

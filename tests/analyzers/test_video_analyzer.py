@@ -1,4 +1,5 @@
 import json
+from pathlib import Path
 
 import pytest
 from pytest_mock import MockerFixture
@@ -34,7 +35,7 @@ def mock_openai(mocker: MockerFixture) -> None:
 
 
 def test_analyze(mock_openai: None) -> None:
-    path = "./frames/test-20.mp4"
+    path = Path("./frames/test-20.mp4")
     user_config = UserConfig(lang="en", platform="web")
     sections = VideoAnalyzer(user_config).analyze(path)
     for section in sections:

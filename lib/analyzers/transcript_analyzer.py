@@ -1,10 +1,22 @@
 import re
 from datetime import datetime
+from pathlib import Path
+
+from moviepy.editor import VideoFileClip
 
 from lib.analyzers.base_analyzer import BaseAnalyzer
 from lib.section import Section, SectionTypes
 from lib.tools.openai_client import Assistant, speech_to_text_srt
 from lib.user_config import UserConfig
+
+
+def _extract_and_save_audio(video_path: Path) -> Path:
+    video = VideoFileClip(str(video_path))
+    assert video.audio is not None
+    audio_filename = video_path.name.split(".")[0] + "-audio.mp3"
+    audio_path = video_path.parent / audio_filename
+    video.audio.write_audiofile(audio_path)
+    return audio_path
 
 
 def _srt_ts_to_seconds(ts: str) -> float:
@@ -37,12 +49,13 @@ def _srt_to_sections(srt_text: str) -> list[Section]:
 class TranscriptAnalyzer(BaseAnalyzer):
     _AssistantType = Assistant.Transcript
 
-    def _prepare_sections(self, file_path: str) -> list[Section]:
-        transcription_srt = speech_to_text_srt(file_path, lang=self.user_config.lang)
+    def _prepare_sections(self, file_path: Path) -> list[Section]:
+        audio_path = _extract_and_save_audio(file_path)
+        transcription_srt = speech_to_text_srt(audio_path, lang=self.user_config.lang)
         sections = _srt_to_sections(transcription_srt)
         return sections
 
 
 if __name__ == "__main__":
     analyzer = TranscriptAnalyzer(UserConfig("en", "tiktok"))
-    print(analyzer.analyze("./frames/test-20.mp4"))
+    print(analyzer.analyze(Path("./frames/test-20.mp4")))

@@ -1,6 +1,7 @@
 import os
 import time
 from enum import Enum
+from pathlib import Path
 
 from openai import OpenAI
 from openai.types.beta.threads import MessageContentText
@@ -73,7 +74,7 @@ def send_chat(title: str, data: str, timeout: int = 60) -> str:
     return content
 
 
-def speech_to_text_srt(file_path: str, lang: str):
+def speech_to_text_srt(file_path: Path, lang: str):
     with open(file_path, "rb") as file:
         # Open the uploaded file and pass it to the OpenAI client for
         # transcription

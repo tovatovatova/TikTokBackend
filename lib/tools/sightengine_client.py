@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 
 from sightengine.client import SightengineClient
 
@@ -7,7 +8,7 @@ client = SightengineClient(
 )
 
 
-def check_video(video_url: str) -> str:
+def check_video(video_url: Path) -> str:
     output = client.check(
         "nudity-2.0",
         "wad",
@@ -29,5 +30,7 @@ def check_video(video_url: str) -> str:
 
 if __name__ == "__main__":
     check_video(
-        "https://storage.googleapis.com/tiktok-analyzer/This%20is%20your%20child%20-%20Vertical%20English.mp4"
+        Path(
+            "https://storage.googleapis.com/tiktok-analyzer/This%20is%20your%20child%20-%20Vertical%20English.mp4"
+        )
     )
