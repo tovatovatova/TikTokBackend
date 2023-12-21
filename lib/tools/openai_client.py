@@ -48,6 +48,31 @@ def run_assistant(assistant: Assistant, data: str, timeout: int = 60) -> str:
     return content.text.value
 
 
+def send_chat(title: str, data: str, timeout: int = 60) -> str:
+    SYSTEM_PROMPT = 'You are an expert in analyzing in-video-text which was extracted from video using google-video-intelligence. You are tasked with assessing whether the text violates social-media policies. You have access to a policy file, describing in details all the policies.\n\nThe user\'s msg will be of json format. A list of in-video text objects holding "idx" (index of the text), "text" (the extracted text), "score" (just null, for now) and "reason" (also null, for now). Example -\n[{"idx":1,"text":"Israel is a Democracy","score":null,"reason":null},{"idx":2,"text":"We call to attack all people","score":null,"reason":null}]\n\nPlease go over each one of the objects, analyze it against the policy and "score" it (1-10), 10 if there is no violation and 1 if is in complete violation (try to use the entire range if possible). For each one, please generate a "reason" for that score, based/quoted from the policy. You are expected to reply with the same array/json the user sent but you are expected to fill in the "score" and the "reason" as you see fit. Example -\n[{"idx": 1,"text":"Israel is a Democracy","score": 10,"reason":"No violations"},{"idx":2,"text":"We call to attack all people","score": 3,"reason":"There is call for violance"}]\n\nTrust the use that his msg is exactly this JSON and head right away to analyze it. You should ALWAYS return the json as mentioned!!!\n\nReturn ONLY JSON!!'
+
+    start_time = time.time()
+    print(f"[{title}] assistant started with {data = }")
+
+    result = client.chat.completions.create(
+        model="gpt-3.5-turbo-1106",
+        messages=[
+            {"role": "system", "content": SYSTEM_PROMPT},
+            {"role": "user", "content": data},
+        ],
+        timeout=timeout,
+        max_tokens=2000,  # TODO: check if this is the optimal number (price and performance)
+        # response_format={'type': 'json_object'}
+    )
+    print(f"[{title}] return after {time.time() - start_time} sec")
+    content = result.choices[0].message.content
+    print(f"[{title}] {content = }")
+
+    assert content is not None
+
+    return content
+
+
 def speech_to_text_srt(file_path: str, lang: str):
     with open(file_path, "rb") as file:
         # Open the uploaded file and pass it to the OpenAI client for
@@ -59,6 +84,12 @@ def speech_to_text_srt(file_path: str, lang: str):
             response_format="srt",
         )
         return str(transcript)
+
+
+def check_gpt_moderations(data: str) -> str:
+    response = client.moderations.create(input=data)
+    response.results[0]
+    raise NotImplementedError
 
 
 def send_images(
