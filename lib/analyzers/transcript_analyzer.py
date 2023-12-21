@@ -1,5 +1,6 @@
 import re
 from datetime import datetime
+from pathlib import Path
 
 from lib.analyzers.base_analyzer import BaseAnalyzer
 from lib.section import Section, SectionTypes
@@ -37,7 +38,7 @@ def _srt_to_sections(srt_text: str) -> list[Section]:
 class TranscriptAnalyzer(BaseAnalyzer):
     _AssistantType = Assistant.Transcript
 
-    def _prepare_sections(self, file_path: str) -> list[Section]:
+    def _prepare_sections(self, file_path: Path) -> list[Section]:
         transcription_srt = speech_to_text_srt(file_path, lang=self.user_config.lang)
         sections = _srt_to_sections(transcription_srt)
         return sections
@@ -45,4 +46,4 @@ class TranscriptAnalyzer(BaseAnalyzer):
 
 if __name__ == "__main__":
     analyzer = TranscriptAnalyzer(UserConfig("en", "tiktok"))
-    print(analyzer.analyze("./frames/test-20.mp4"))
+    print(analyzer.analyze(Path("./frames/test-20.mp4")))

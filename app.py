@@ -1,5 +1,6 @@
 import os
 from dataclasses import asdict
+from pathlib import Path
 
 from flask import Flask, jsonify, request
 from flask_cors import CORS
@@ -35,13 +36,13 @@ def upload_file():
 
     try:
         # Save the uploaded file
-        file_path = os.path.join(UPLOAD_FOLDER, file.filename)
+        file_path = Path(UPLOAD_FOLDER) / file.filename
         file.save(file_path)
 
         results = get_final_results(file_path, user_config)
 
         # Delete the saved audio file after transcription
-        os.remove(file_path)
+        file_path.unlink()
         results_dicts = [asdict(section) for section in results]
         return jsonify(results_dicts)
     except Exception as e:

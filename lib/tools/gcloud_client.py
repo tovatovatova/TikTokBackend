@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 
 import google.cloud.storage as gc_storage
 import google.cloud.videointelligence as gc_video
@@ -7,13 +8,13 @@ from lib.section import Section, SectionTypes
 
 
 def upload_blob(
-    bucket_name: str, source_file_name: str, destination_blob_name: str
+    bucket_name: str, source_file_name: Path, destination_blob_name: str
 ) -> None:
     """Uploads a file to the bucket."""
     storage_client = gc_storage.Client()
     bucket = storage_client.bucket(bucket_name)
     blob = bucket.blob(destination_blob_name)
-    blob.upload_from_filename(source_file_name)
+    blob.upload_from_filename(str(source_file_name))
     print(f"File {source_file_name} uploaded to {destination_blob_name}.")
 
 
@@ -67,7 +68,7 @@ def extract_in_video_text(gcs_uri: str) -> list[Section]:
     return detected_texts
 
 
-def upload_video_and_extract_in_video_text(local_path: str) -> list[Section]:
+def upload_video_and_extract_in_video_text(local_path: Path) -> list[Section]:
     # Upload local video file to Google Cloud Storage
     bucket_name = "tiktok-analyzer"
     blob_name = os.path.basename(local_path)
@@ -80,4 +81,4 @@ def upload_video_and_extract_in_video_text(local_path: str) -> list[Section]:
 
 
 if __name__ == "__main__":
-    upload_video_and_extract_in_video_text("./frames/test-20.mp4")
+    upload_video_and_extract_in_video_text(Path("./frames/test-20.mp4"))

@@ -1,5 +1,6 @@
 import base64
 import json
+from pathlib import Path
 
 import cv2
 
@@ -9,8 +10,8 @@ from lib.tools.openai_client import Assistant, send_images
 from lib.user_config import UserConfig
 
 
-def _video_to_frames(file_path: str, sampling_interval_sec: float) -> list[str]:
-    video = cv2.VideoCapture(file_path)
+def _video_to_frames(file_path: Path, sampling_interval_sec: float) -> list[str]:
+    video = cv2.VideoCapture(str(file_path))
 
     # TODO: Handle correctly with exceptions and converting to response
     assert video.isOpened(), f"Video file {file_path} not found."
@@ -105,7 +106,7 @@ class VideoAnalyzer(BaseAnalyzer):
         You response mush bt ONLY the JSON formatted reply!
     """
 
-    def _prepare_sections(self, file_path: str) -> list[Section]:
+    def _prepare_sections(self, file_path: Path) -> list[Section]:
         # Sample frames from the video
         sample_rate_sec = 2.0
         frames = _video_to_frames(file_path, sample_rate_sec)
@@ -121,4 +122,4 @@ class VideoAnalyzer(BaseAnalyzer):
 
 if __name__ == "__main__":
     analyzer = VideoAnalyzer(UserConfig("", ""))
-    analyzer.analyze("./frames/test-20.mp4")
+    analyzer.analyze(Path("./frames/test-20.mp4"))

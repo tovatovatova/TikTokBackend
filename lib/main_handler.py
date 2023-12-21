@@ -1,4 +1,5 @@
 from concurrent.futures import ThreadPoolExecutor
+from pathlib import Path
 
 from lib.analyzers import AllAnalyzers
 from lib.analyzers.base_analyzer import BaseAnalyzer
@@ -6,7 +7,7 @@ from lib.section import Section, SectionTypes
 from lib.user_config import UserConfig
 
 
-def get_final_results(file_path: str, user_config: UserConfig) -> list[Section]:
+def get_final_results(file_path: Path, user_config: UserConfig) -> list[Section]:
     final_results: list[Section] = []
     analyzers = [Analyzer(user_config) for Analyzer in AllAnalyzers]
     with ThreadPoolExecutor(max_workers=len(analyzers)) as executor:
@@ -35,4 +36,4 @@ def get_final_results(file_path: str, user_config: UserConfig) -> list[Section]:
 
 
 if __name__ == "__main__":
-    get_final_results("./frames/test-20.mp4", UserConfig("en", "tiktok"))
+    get_final_results(Path("./frames/test-20.mp4"), UserConfig("en", "tiktok"))

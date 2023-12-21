@@ -1,6 +1,7 @@
 import json
 import re
 from abc import ABC, abstractmethod
+from pathlib import Path
 
 from lib.section import Section
 from lib.tools.openai_client import Assistant, run_assistant
@@ -14,7 +15,7 @@ class BaseAnalyzer(ABC):
         # TODO: Validate user config?
         self.user_config = user_config
 
-    def analyze(self, file_path: str) -> list[Section]:
+    def analyze(self, file_path: Path) -> list[Section]:
         sections = self._prepare_sections(file_path)
         # TODO: Validate sections structure?
 
@@ -33,7 +34,7 @@ class BaseAnalyzer(ABC):
         return sections
 
     @abstractmethod
-    def _prepare_sections(self, file_path: str) -> list[Section]:
+    def _prepare_sections(self, file_path: Path) -> list[Section]:
         ...
 
     def _post_process_sections(self, sections: list[Section]) -> list[Section]:
