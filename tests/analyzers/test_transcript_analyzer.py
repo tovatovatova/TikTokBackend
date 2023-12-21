@@ -23,7 +23,7 @@ def mock_openai(mocker: MockerFixture) -> None:
 
 
 def test_analyze(mock_openai: None) -> None:
-    path = Path("path/to/audio")
+    path = Path("./frames/test-20.mp4")
     user_config = UserConfig(lang="en", platform="web")
     sections = TranscriptAnalyzer(user_config).analyze(path)
 
