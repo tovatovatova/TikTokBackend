@@ -5,6 +5,7 @@ import pytest
 from pytest_mock import MockerFixture
 
 from lib.analyzers import VideoAnalyzer
+from lib.section import Status
 from lib.user_config import UserConfig
 
 
@@ -39,4 +40,4 @@ def test_analyze(mock_openai: None) -> None:
     user_config = UserConfig(lang="en", platform="web")
     sections = VideoAnalyzer(user_config).analyze(path)
     for section in sections:
-        assert section.processed
+        assert section.status == Status.success
