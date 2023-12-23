@@ -2,7 +2,6 @@ import json
 import re
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Callable
 
 from lib.section import Section, SectionTypes, Status
 from lib.tools.openai_client import Assistant, run_assistant
@@ -19,21 +18,30 @@ class BaseAnalyzer(ABC):
 
     def analyze(self, file_path: Path) -> list[Section]:
         assert self.SectionType is not None
-        sections = self._handle_unexpected_exceptions(
-            lambda: self._prepare_sections(file_path)
-        )
+        try:
+            sections = self._prepare_sections(file_path)
+        except Exception as e:
+            return self._analyzer_failure_err("prepare sections failed", e)
 
         # TODO: Validate sections structure?
 
-        processed_sections = self._handle_unexpected_exceptions(
-            lambda: self.__process_sections(sections)
-        )
+        try:
+            processed_sections = self.__process_sections(sections)
+        except Exception as e:
+            return self._analyzer_failure_err("process sections failed", e)
 
-        final_sections = self._handle_unexpected_exceptions(
-            lambda: self._post_process_sections(processed_sections)
-        )
+        try:
+            final_sections = self._post_process_sections(processed_sections)
+        except Exception as e:
+            return self._analyzer_failure_err("post sections failed", e)
 
         return final_sections
+
+    def _analyzer_failure_err(self, description: str, e: Exception) -> list[Section]:
+        assert self.SectionType is not None
+        return [
+            Section(0, 0, description, self.SectionType, status=Status.error, error=e)
+        ]
 
     def __process_sections(self, sections: list[Section]) -> list[Section]:
         assert self._AssistantType is not None
@@ -58,19 +66,3 @@ class BaseAnalyzer(ABC):
         ret = re.sub(r".*```json", "", ret, re.DOTALL)
         ret = re.sub(r"```.*", "", ret, re.DOTALL)
         return ret
-
-    def _handle_unexpected_exceptions(self, func: Callable[[], list[Section]]):
-        assert self.SectionType is not None
-        try:
-            return func()
-        except Exception as e:
-            return [
-                Section(
-                    0,
-                    0,
-                    f"unexpected failure in {func.__name__}",
-                    self.SectionType,
-                    status=Status.error,
-                    error=e,
-                )
-            ]
