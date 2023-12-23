@@ -43,8 +43,12 @@ class Section:
     def update_from_gpt(self, gpt_response: dict[str, Any]) -> None:
         try:
             # TODO: Parsing Error handling
-            assert isinstance(gpt_response["score"], int)
-            assert isinstance(gpt_response["reason"], str)
+            assert isinstance(
+                gpt_response["score"], int
+            ), f'expected gpt_response["score"] to be type int but got `{type(gpt_response["score"])}`'
+            assert isinstance(
+                gpt_response["reason"], str
+            ), f'expected gpt_response["reason"] to be type int but got `{type(gpt_response["reason"])}`'
             self.score = gpt_response["score"]
             self.reason = gpt_response["reason"]
             self.status = Status.success
